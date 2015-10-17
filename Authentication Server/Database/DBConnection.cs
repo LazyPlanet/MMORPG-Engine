@@ -2,7 +2,7 @@
 using MySql.Data.MySqlClient;
 
 
-namespace Authentication_Server {
+namespace Authentication_Server.Database {
     public class DBConnection {
 
         private         String          dbname      = String.Empty;
