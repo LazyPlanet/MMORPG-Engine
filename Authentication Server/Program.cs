@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Net;
 using System.Collections.Generic;
 using Lidgren.Network;
 using System.Threading;
@@ -7,14 +6,35 @@ using System.Threading;
 namespace Authentication_Server {
     class Program {
 
-        private static List<Realm>  RealmList       = new List<Realm>();
-        private static Boolean      RealmListMutex  = true;
-        private static Timer        RealmListTimer;
+        private static NetPeerConfiguration NetConfig = new NetPeerConfiguration("AuthServer");
+        private static NetPeer              NetServer;
+
+        private enum NetClientPackets {
+            LoginRequest,
+            ActivePing
+        };
+        private static Dictionary<NetClientPackets, Action<NetPeer, NetIncomingMessage>> PacketHandler = new Dictionary<NetClientPackets, Action<NetPeer, NetIncomingMessage>>() {
+            { NetClientPackets.LoginRequest,    HandleLoginRequest },
+            { NetClientPackets.ActivePing,      HandleActivePing },
+        };
+
+        private static List<Realm>          RealmList       = new List<Realm>();
+        private static Boolean              RealmListMutex  = true;
+        private static Timer                RealmListTimer;
 
         static void Main(string[] args) {
 
+            // Configure our networking process.
+            NetConfig.Port                  = (Int32)Properties.Settings.Default["HostPort"];
+            NetConfig.MaximumConnections    = 100;
+            NetServer                       = new NetPeer(NetConfig);
+            NetServer.RegisterReceivedCallback(new SendOrPostCallback(HandleNetMessage), new SynchronizationContext());
+
             // Set up our timers that will periodically perform some background work.
             RealmListTimer = new Timer(new TimerCallback(UpdateRealmList), null, 0, 60000);
+
+            // Start the server! We're done loading.
+            NetServer.Start();
 
             Console.ReadLine();
 
@@ -22,14 +42,13 @@ namespace Authentication_Server {
 
         private static void SetupDBConnection(DBConnection conn) {
             if (conn.Hostname == String.Empty) {
-                conn.Hostname = Properties.Settings.Default["SqlHost"] as String;
-                conn.Port = (Int32)Properties.Settings.Default["SqlPort"];
-                conn.DatabaseName = Properties.Settings.Default["SqlDatabase"] as String;
-                conn.Username = Properties.Settings.Default["SqlUser"] as String;
-                conn.Password = Properties.Settings.Default["SqlPassword"] as String;
+                conn.Hostname       = Properties.Settings.Default["SqlHost"] as String;
+                conn.Port           = (Int32)Properties.Settings.Default["SqlPort"];
+                conn.DatabaseName   = Properties.Settings.Default["SqlDatabase"] as String;
+                conn.Username       = Properties.Settings.Default["SqlUser"] as String;
+                conn.Password       = Properties.Settings.Default["SqlPassword"] as String;
             }
         }
-
         private static void UpdateRealmList(object state) {
             var conn = DBConnection.Instance();
 
@@ -66,6 +85,47 @@ namespace Authentication_Server {
 
             // Release the Realm List.
             RealmListMutex = true;
+        }
+        private static void HandleNetMessage(object state) {
+            var peer = state as NetPeer;
+            var msg = peer.ReadMessage();
+            
+            switch (msg.MessageType) {
+
+                case NetIncomingMessageType.DebugMessage:
+                case NetIncomingMessageType.ErrorMessage:
+                case NetIncomingMessageType.WarningMessage:
+                case NetIncomingMessageType.VerboseDebugMessage:
+                    Console.WriteLine(msg.ReadString());
+                break;
+
+                case NetIncomingMessageType.StatusChanged:
+                    var status = (NetConnectionStatus)msg.ReadByte();
+                    var reason = msg.ReadString();
+                    Console.WriteLine(NetUtility.ToHexString(msg.SenderConnection.RemoteUniqueIdentifier) + " " + status + ": " + reason);
+                    if (status == NetConnectionStatus.Connected) Console.WriteLine("Remote hail: " + msg.SenderConnection.RemoteHailMessage.ReadString());
+                break;
+
+                case NetIncomingMessageType.Data:
+                    // Retrieve our data and pass it on to the designated handler.
+                    Action<NetPeer, NetIncomingMessage> handler;
+                    if (PacketHandler.TryGetValue((NetClientPackets)msg.ReadInt32(), out handler)) handler(peer, msg);
+                break;
+
+                default:
+                    Console.WriteLine("Unhandled Message: " + msg.MessageType + " " + msg.LengthBytes + " bytes " + msg.DeliveryMethod + "|" + msg.SequenceChannel);
+                break;
+            }
+
+            // Recycle the message.
+            peer.Recycle(msg);
+
+        }
+        private static void HandleActivePing(NetPeer peer, NetIncomingMessage msg) {
+            throw new NotImplementedException();
+        }
+        private static void HandleLoginRequest(NetPeer peer, NetIncomingMessage msg) {
+            throw new NotImplementedException();
         }
     }
 }
