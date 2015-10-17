@@ -38,8 +38,9 @@ CREATE TABLE `Realms` (
   `address` varchar(15) NOT NULL,
   `port` int(11) NOT NULL,
   `lastactive` datetime DEFAULT NULL,
+  `visible` int(11) NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
 
 /*Table structure for table `Users` */
 
@@ -54,7 +55,7 @@ CREATE TABLE `Users` (
   `rank` tinyint(4) NOT NULL DEFAULT '0',
   `active` tinyint(4) NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
 
 /* Function  structure for function  `AuthenticateUser` */
 
@@ -163,6 +164,45 @@ BEGIN
 	
     END */$$
 DELIMITER ;
+
+/* Procedure structure for procedure `AddRealm` */
+
+/*!50003 DROP PROCEDURE IF EXISTS  `AddRealm` */;
+
+DELIMITER $$
+
+/*!50003 CREATE DEFINER=`silvester`@`%` PROCEDURE `AddRealm`(
+	in_name 	varchar(50),
+	in_address 	varchar(15),
+	in_port		Int,
+	in_visible	tinyint
+)
+BEGIN
+	INSERT INTO `Realms` (`name`, `address`, `port`, `visible`) 
+	VALUES (in_name, in_address, in_port, in_visible);
+    END */$$
+DELIMITER ;
+
+/*Table structure for table `RealmList` */
+
+DROP TABLE IF EXISTS `RealmList`;
+
+/*!50001 DROP VIEW IF EXISTS `RealmList` */;
+/*!50001 DROP TABLE IF EXISTS `RealmList` */;
+
+/*!50001 CREATE TABLE  `RealmList`(
+ `name` varchar(50) ,
+ `address` varchar(15) ,
+ `port` int(11) ,
+ `lastactive` datetime 
+)*/;
+
+/*View structure for view RealmList */
+
+/*!50001 DROP TABLE IF EXISTS `RealmList` */;
+/*!50001 DROP VIEW IF EXISTS `RealmList` */;
+
+/*!50001 CREATE ALGORITHM=UNDEFINED DEFINER=`silvester`@`%` SQL SECURITY DEFINER VIEW `RealmList` AS (select `Realms`.`name` AS `name`,`Realms`.`address` AS `address`,`Realms`.`port` AS `port`,`Realms`.`lastactive` AS `lastactive` from `Realms` where (`Realms`.`visible` = 1)) */;
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
 /*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;

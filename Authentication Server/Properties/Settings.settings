@@ -1,0 +1,24 @@
+﻿<?xml version='1.0' encoding='utf-8'?>
+<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="Authentication_Server.Properties" GeneratedClassName="Settings">
+  <Profiles />
+  <Settings>
+    <Setting Name="HostPort" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">7001</Value>
+    </Setting>
+    <Setting Name="SqlHost" Type="System.String" Scope="User">
+      <Value Profile="(Default)">192.168.16.202</Value>
+    </Setting>
+    <Setting Name="SqlPort" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">3306</Value>
+    </Setting>
+    <Setting Name="SqlDatabase" Type="System.String" Scope="User">
+      <Value Profile="(Default)">AuthServer</Value>
+    </Setting>
+    <Setting Name="SqlUser" Type="System.String" Scope="User">
+      <Value Profile="(Default)">authserver</Value>
+    </Setting>
+    <Setting Name="SqlPassword" Type="System.String" Scope="User">
+      <Value Profile="(Default)">12345</Value>
+    </Setting>
+  </Settings>
+</SettingsFile>
