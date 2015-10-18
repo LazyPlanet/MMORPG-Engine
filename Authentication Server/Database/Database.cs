@@ -41,7 +41,7 @@ namespace Authentication_Server.Database {
                         Name = reader["name"] as String,
                         Hostname = reader["address"] as String,
                         Port = (Int32)reader["port"],
-                        LastUsed = reader["lastactive"] == DBNull.Value ? DateTime.MinValue : (DateTime)reader["lastactive"]
+                        LastUsed = reader["lastactive"] == DBNull.Value ? DateTime.MinValue : Convert.ToDateTime(reader["lastactive"])
                     });
 
                 }
@@ -53,6 +53,24 @@ namespace Authentication_Server.Database {
 
             // Release the Realm List.
             RealmListMutex = true;
+        }
+
+        public static Byte AuthenticateUser(String user, String pass) {
+            var conn = DBConnection.Instance();
+            Byte result = 99;                                                                                                           // 99 will be our complete failure state.
+
+            // Make sure we've got our settings sorted out before moving on.
+            SetupDBConnection(conn);
+
+            if (conn.Connect()) {
+                var reader = conn.ExecuteSqlReader(String.Format("SELECT AuthenticateUser('{0}', '{1}') AS success", user, pass));
+                while (reader.Read()) {
+                    result = Convert.ToByte(reader["success"]);
+                }
+            } else {
+                result = 99;
+            }
+            return result;
         }
 
     }

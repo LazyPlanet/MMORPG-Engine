@@ -1,18 +1,14 @@
-﻿using Lidgren.Network;
+﻿using Authentication_Server.Database;
+using Lidgren.Network;
 using System;
 using System.Collections.Generic;
 
 namespace Authentication_Server.Networking {
     public static class Handlers {
 
-        private enum NetClientPackets {
-            LoginRequest,
-            ActivePing
-        };
-
-        private static Dictionary<NetClientPackets, Action<NetPeer, NetIncomingMessage>> Handler = new Dictionary<NetClientPackets, Action<NetPeer, NetIncomingMessage>>() {
-            { NetClientPackets.LoginRequest,    HandleLoginRequest },
-            { NetClientPackets.ActivePing,      HandleActivePing },
+        private static Dictionary<Packets.Client, Action<NetIncomingMessage>> Handler = new Dictionary<Packets.Client, Action<NetIncomingMessage>>() {
+            { Packets.Client.LoginRequest,    HandleLoginRequest },
+            { Packets.Client.ActivePing,      HandleActivePing },
         };
 
         public static void HandleNetMessage(object state) {
@@ -37,8 +33,8 @@ namespace Authentication_Server.Networking {
 
                 case NetIncomingMessageType.Data:
                 // Retrieve our data and pass it on to the designated handler.
-                Action<NetPeer, NetIncomingMessage> handler;
-                if (Handler.TryGetValue((NetClientPackets)msg.ReadInt32(), out handler)) handler(peer, msg);
+                Action<NetIncomingMessage> handler;
+                if (Handler.TryGetValue((Packets.Client)msg.ReadInt32(), out handler)) handler(msg);
                 break;
 
                 default:
@@ -51,11 +47,23 @@ namespace Authentication_Server.Networking {
 
         }
 
-        private static void HandleActivePing(NetPeer peer, NetIncomingMessage msg) {
+        private static void HandleActivePing(NetIncomingMessage msg) {
             throw new NotImplementedException();
         }
-        private static void HandleLoginRequest(NetPeer peer, NetIncomingMessage msg) {
-            throw new NotImplementedException();
+        private static void HandleLoginRequest(NetIncomingMessage msg) {
+            Console.WriteLine(String.Format("Received LoginRequest from {0}", NetUtility.ToHexString(msg.SenderConnection.RemoteUniqueIdentifier)));
+
+            // Retrieve our username and password from the message.
+            var user = msg.ReadString();
+            var pass = msg.ReadString();
+
+            // Attempt to authenticate the user.
+            if (Data.AuthenticateUser(user, pass) == 0) {
+                // Login OK.
+            } else {
+                // Login Failed.
+                Send.SendAuthFailed(msg.SenderConnection);
+            }
         }
 
     }

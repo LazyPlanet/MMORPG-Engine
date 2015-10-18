@@ -6,13 +6,13 @@ using Lidgren.Network;
 namespace Authentication_Server.Networking {
     public class NetServer {
 
-        private         IPAddress               netaddress;
-        private         Int32                   netport;
-        private         Int32                   netmax;
-        private         Action<Object>          nethandler  = null;
-        private         NetPeerConfiguration    netconfig   = null;
-        private         NetPeer                 netconn     = null;
-        private static  NetServer               netinstance = null;
+        private         IPAddress                   netaddress;
+        private         Int32                       netport;
+        private         Int32                       netmax;
+        private         Action<Object>              nethandler  = null;
+        private         NetPeerConfiguration        netconfig   = null;
+        private         Lidgren.Network.NetServer   netconn     = null;
+        private static  NetServer                   netinstance = null;
         
         public IPAddress BindAddress {
             get { return netaddress; }
@@ -55,7 +55,7 @@ namespace Authentication_Server.Networking {
                     netconfig = new NetPeerConfiguration("AuthServer");
                     netconfig.Port = netport;
                     netconfig.MaximumConnections = netmax;
-                    netconn = new NetPeer(netconfig);
+                    netconn = new Lidgren.Network.NetServer(netconfig);
                     netconn.RegisterReceivedCallback(new SendOrPostCallback(nethandler), new SynchronizationContext());
                 }
                 try {
@@ -66,6 +66,12 @@ namespace Authentication_Server.Networking {
                 }
             }
             return result;
+        }
+
+        public void Send(NetConnection conn, NetBuffer data) {
+            var msg = netconn.CreateMessage();
+            msg.Write(data);
+            netconn.SendMessage(msg, conn, NetDeliveryMethod.ReliableOrdered);
         }
 
         public NetPeer GetPeer() {
