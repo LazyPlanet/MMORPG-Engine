@@ -96,6 +96,21 @@ BEGIN
     END */$$
 DELIMITER ;
 
+/* Function  structure for function  `GetUserId` */
+
+/*!50003 DROP FUNCTION IF EXISTS `GetUserId` */;
+DELIMITER $$
+
+/*!50003 CREATE DEFINER=`silvester`@`%` FUNCTION `GetUserId`(
+	in_username varchar(30)
+) RETURNS int(11)
+BEGIN
+	DECLARE out_id int;
+	select `id` from Users where `username` = in_username into out_id;
+	return out_id;
+    END */$$
+DELIMITER ;
+
 /* Function  structure for function  `RegisterUser` */
 
 /*!50003 DROP FUNCTION IF EXISTS `RegisterUser` */;

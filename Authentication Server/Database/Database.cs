@@ -38,10 +38,12 @@ namespace Authentication_Server.Database {
                 RealmList.Clear();
                 while (reader.Read()) {
                     RealmList.Add(new Realm() {
-                        Name = reader["name"] as String,
-                        Hostname = reader["address"] as String,
-                        Port = (Int32)reader["port"],
-                        LastUsed = reader["lastactive"] == DBNull.Value ? DateTime.MinValue : Convert.ToDateTime(reader["lastactive"])
+                        Name        = Convert.ToString(reader["name"]),
+                        Hostname    = Convert.ToString(reader["address"]),
+                        Port        = Convert.ToInt32(reader["port"]),
+                        LastUsed    = reader["lastactive"] == DBNull.Value 
+                                        ? DateTime.MinValue 
+                                        : Convert.ToDateTime(reader["lastactive"])
                     });
 
                 }
@@ -55,20 +57,23 @@ namespace Authentication_Server.Database {
             RealmListMutex = true;
         }
 
-        public static Byte AuthenticateUser(String user, String pass) {
+        public static Int32[] AuthenticateUser(String user, String pass) {
             var conn = DBConnection.Instance();
-            Byte result = 99;                                                                                                           // 99 will be our complete failure state.
+            Int32[] result = new Int32[2];
 
             // Make sure we've got our settings sorted out before moving on.
             SetupDBConnection(conn);
 
             if (conn.Connect()) {
-                var reader = conn.ExecuteSqlReader(String.Format("SELECT AuthenticateUser('{0}', '{1}') AS success", user, pass));
+                var reader = conn.ExecuteSqlReader(String.Format("SELECT AuthenticateUser('{0}', '{1}') AS success, GetUserId('{0}') AS id", user, pass));
                 while (reader.Read()) {
-                    result = Convert.ToByte(reader["success"]);
+                    result[0] = Convert.ToByte(reader["success"]);
+                    result[1] = reader["id"] == DBNull.Value ? 0 : Convert.ToInt32(reader["id"]);
                 }
             } else {
-                result = 99;
+                result[0] = 1;
+                result[1] = 0;
+                Console.WriteLine("Database Connection failed!");
             }
             return result;
         }

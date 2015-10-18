@@ -58,8 +58,10 @@ namespace Authentication_Server.Networking {
             var pass = msg.ReadString();
 
             // Attempt to authenticate the user.
-            if (Data.AuthenticateUser(user, pass) == 0) {
+            var result = Data.AuthenticateUser(user, pass);
+            if (result[0] == 0) {
                 // Login OK.
+                var id = result[1];
             } else {
                 // Login Failed.
                 Send.SendAuthFailed(msg.SenderConnection);
