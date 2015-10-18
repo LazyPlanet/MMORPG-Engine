@@ -1,18 +1,16 @@
 ﻿using Lidgren.Network;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Authentication_Server.Networking {
-    public static class Packets {
+    public static class Handlers {
 
         private enum NetClientPackets {
             LoginRequest,
             ActivePing
         };
-        private static Dictionary<NetClientPackets, Action<NetPeer, NetIncomingMessage>> PacketHandler = new Dictionary<NetClientPackets, Action<NetPeer, NetIncomingMessage>>() {
+
+        private static Dictionary<NetClientPackets, Action<NetPeer, NetIncomingMessage>> Handler = new Dictionary<NetClientPackets, Action<NetPeer, NetIncomingMessage>>() {
             { NetClientPackets.LoginRequest,    HandleLoginRequest },
             { NetClientPackets.ActivePing,      HandleActivePing },
         };
@@ -40,7 +38,7 @@ namespace Authentication_Server.Networking {
                 case NetIncomingMessageType.Data:
                 // Retrieve our data and pass it on to the designated handler.
                 Action<NetPeer, NetIncomingMessage> handler;
-                if (PacketHandler.TryGetValue((NetClientPackets)msg.ReadInt32(), out handler)) handler(peer, msg);
+                if (Handler.TryGetValue((NetClientPackets)msg.ReadInt32(), out handler)) handler(peer, msg);
                 break;
 
                 default:
@@ -59,5 +57,6 @@ namespace Authentication_Server.Networking {
         private static void HandleLoginRequest(NetPeer peer, NetIncomingMessage msg) {
             throw new NotImplementedException();
         }
+
     }
 }
