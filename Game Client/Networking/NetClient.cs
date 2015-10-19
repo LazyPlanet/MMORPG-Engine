@@ -54,7 +54,7 @@ namespace Game_Client.Networking {
                     netconn.Start();
                     var hail = netconn.CreateMessage("Coming in hot!");
                     var conn = netconn.Connect(netaddress, netport, hail);
-                    result = conn.Status == NetConnectionStatus.Connected ? true : false;
+                    result = true;
                 } catch {
                     result = false;
                 }

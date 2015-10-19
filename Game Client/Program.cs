@@ -14,9 +14,9 @@ namespace Game_Client {
             Console.ReadLine();
 
             var client = NetClient.Instance();
-            client.Hostname     = Properties.Settings.Default["Hostname"] as String;
-            client.Port         = (Int32)Properties.Settings.Default["Port"];
-            client.MessageHandler = new Action<object>((o) => { Console.WriteLine("data received."); });
+            client.Hostname         = Properties.Settings.Default["Hostname"] as String;
+            client.Port             = (Int32)Properties.Settings.Default["Port"];
+            client.MessageHandler   = Handlers.HandleNetMessage;
 
             if (client.Connect()) {
                 Console.WriteLine("Connected!\nEnter your username.");
@@ -27,7 +27,6 @@ namespace Game_Client {
                 Send.SendLoginRequest(user, pass);
                 Console.ReadLine();
             }
-
             client.Close();
 
         }
