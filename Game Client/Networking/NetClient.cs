@@ -53,8 +53,8 @@ namespace Game_Client.Networking {
                 try {
                     netconn.Start();
                     var hail = netconn.CreateMessage("Coming in hot!");
-                    netconn.Connect(netaddress, netport, hail);
-                    result = true;
+                    var conn = netconn.Connect(netaddress, netport, hail);
+                    result = conn.Status == NetConnectionStatus.Connected ? true : false;
                 } catch {
                     result = false;
                 }
@@ -73,6 +73,7 @@ namespace Game_Client.Networking {
         }
 
         public void Close() {
+            if (netconn == null) return;
             netconn.Disconnect("Halting Client.");
         }
 

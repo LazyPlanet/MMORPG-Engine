@@ -2,6 +2,7 @@
 using System.Net;
 using System.Threading;
 using Lidgren.Network;
+using System.Collections.Generic;
 
 namespace Authentication_Server.Networking {
     public class NetServer {
@@ -69,16 +70,22 @@ namespace Authentication_Server.Networking {
         }
 
         public void Send(NetConnection conn, NetBuffer data) {
+            if (netconn == null) return;
             var msg = netconn.CreateMessage();
             msg.Write(data);
             netconn.SendMessage(msg, conn, NetDeliveryMethod.ReliableOrdered);
         }
 
-        public NetPeer GetPeer() {
+        public Lidgren.Network.NetServer GetPeer() {
             return netconn;
         }
 
+        public List<NetConnection> Connections() {
+            return netconn == null ? new List<NetConnection>() : netconn.Connections;
+        }
+
         public void Close() {
+            if (netconn == null) return;
             netconn.Shutdown("Halting Server.");
         }
     }
