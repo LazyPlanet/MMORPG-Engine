@@ -1,6 +1,8 @@
 ﻿using System;
 using Lidgren.Network;
 using System.Collections.Generic;
+using Game_Client.Database;
+using System.Linq;
 
 namespace Game_Client.Networking {
     public static class Handlers {
@@ -52,6 +54,21 @@ namespace Game_Client.Networking {
 
         private static void HandleAuthSuccess(NetIncomingMessage msg) {
             Console.WriteLine("Authenticated!");
+            var realms  = new List<Realm>();
+            var guid    = Guid.Parse(msg.ReadString());
+            var count   = msg.ReadInt32();
+            realms.AddRange(
+                from i in Enumerable.Range(0, count)
+                let name        = msg.ReadString()
+                let hostname    = msg.ReadString()
+                let port        = msg.ReadInt32()
+                let lastused    = DateTime.Parse(msg.ReadString())
+                select new Realm() { Name = name, Hostname = hostname, Port = port, LastUsed = lastused }
+            );
+            Console.WriteLine(String.Format("Received {0} Realms.", realms.Count));
+            foreach (var realm in realms) {
+                Console.WriteLine(String.Format("- {0}\t{1}:{2}\t{3}", realm.Name, realm.Hostname, realm.Port, realm.LastUsed.ToString()));
+            }
         }
     }
 }

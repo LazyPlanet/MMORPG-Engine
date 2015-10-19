@@ -43,6 +43,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Database\Realm.cs" />
     <Compile Include="Networking\Handlers.cs" />
     <Compile Include="Networking\NetClient.cs" />
     <Compile Include="Networking\Packets.cs" />

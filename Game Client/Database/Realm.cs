@@ -1,14 +1,12 @@
 ﻿using System;
 
-namespace Authentication_Server {
-
-
+namespace Game_Client.Database {
     public class Realm {
 
-        private String      rname = String.Empty;
-        private String      rhost = String.Empty;
-        private Int32       rport = 0;
-        private DateTime    rused = DateTime.MinValue;
+        private String rname = String.Empty;
+        private String rhost = String.Empty;
+        private Int32 rport = 0;
+        private DateTime rused = DateTime.MinValue;
 
         public String Name {
             get { return rname; }

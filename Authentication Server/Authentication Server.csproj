@@ -51,8 +51,10 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Database\Database.cs" />
+    <Compile Include="Database\Data.cs" />
     <Compile Include="Database\DBConnection.cs" />
+    <Compile Include="Database\GUIDStore.cs" />
+    <Compile Include="Database\RealmList.cs" />
     <Compile Include="Networking\Handlers.cs" />
     <Compile Include="Networking\NetServer.cs" />
     <Compile Include="Networking\Packets.cs" />
@@ -64,7 +66,6 @@
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
       <DependentUpon>Settings.settings</DependentUpon>
     </Compile>
-    <Compile Include="Database\Realm.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

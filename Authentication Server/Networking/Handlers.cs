@@ -61,10 +61,20 @@ namespace Authentication_Server.Networking {
             var result = Data.AuthenticateUser(user, pass);
             if (result[0] == 0) {
                 // Login OK.
+                // Generate a brand new GUID and add our user to the internal storage for later use.
                 var id = result[1];
+                var guid = Guid.NewGuid();
+                var storage = GUIDStore.Instance();
+                storage.AddGUID(id, guid);
+
+                Console.WriteLine(String.Format("Added new GUID to storage: {0}", guid));
+
+                // Send our user the OK and our realmlist.
+                Send.AuthSuccess(msg.SenderConnection, guid);
             } else {
                 // Login Failed.
-                Send.SendAuthFailed(msg.SenderConnection);
+                // Tell our user they entered incorrect information.
+                Send.AuthFailed(msg.SenderConnection);
             }
         }
 

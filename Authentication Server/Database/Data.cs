@@ -1,12 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Threading;
 
 namespace Authentication_Server.Database {
     public static class Data {
-
-        private static List<Realm> RealmList = new List<Realm>();
-        private static Boolean RealmListMutex = true;
 
         private static void SetupDBConnection(DBConnection conn) {
             if (conn.Hostname == String.Empty) {
@@ -17,17 +13,11 @@ namespace Authentication_Server.Database {
                 conn.Password       = Properties.Settings.Default["SqlPassword"] as String;
             }
         }
-        public static void UpdateRealmList(object state) {
+        internal static void UpdateRealmList(object state) {
             var conn = DBConnection.Instance();
 
-            // Make sure the realmlist is not currently used by any other process.
-            // We can't change the collection while it is being used after all.
-            while (!RealmListMutex) {
-                Thread.Sleep(1);
-            }
-
-            // Claim the realm list.
-            RealmListMutex = false;
+            var list = RealmList.Instance();
+            var realms = new List<Realm>();
 
             // Make sure we've got our settings sorted out before moving on.
             SetupDBConnection(conn);
@@ -35,9 +25,8 @@ namespace Authentication_Server.Database {
             // Connect to the database and retrieve our data.
             if (conn.Connect()) {
                 var reader = conn.ExecuteSqlReader(@"SELECT * from RealmList");
-                RealmList.Clear();
                 while (reader.Read()) {
-                    RealmList.Add(new Realm() {
+                    realms.Add(new Realm() {
                         Name        = Convert.ToString(reader["name"]),
                         Hostname    = Convert.ToString(reader["address"]),
                         Port        = Convert.ToInt32(reader["port"]),
@@ -48,13 +37,17 @@ namespace Authentication_Server.Database {
 
                 }
                 conn.Close();
-                Console.WriteLine(String.Format("Successfully found {0} Realms.", RealmList.Count));
+                list.Fill(realms);
+                Console.WriteLine(String.Format("Successfully found {0} Realms.", realms.Count));
             } else {
                 Console.WriteLine("Database Connection failed!");
             }
+        }
 
-            // Release the Realm List.
-            RealmListMutex = true;
+        internal static void PurgeOldGuids(object state) {
+            var list = GUIDStore.Instance();
+            var count = list.RemoveOld();
+            Console.WriteLine(String.Format("Removed {0} expired Guids.", count));
         }
 
         public static Int32[] AuthenticateUser(String user, String pass) {
