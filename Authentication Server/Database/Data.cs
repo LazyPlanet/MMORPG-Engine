@@ -63,6 +63,7 @@ namespace Authentication_Server.Database {
                     result[0] = Convert.ToByte(reader["success"]);
                     result[1] = reader["id"] == DBNull.Value ? 0 : Convert.ToInt32(reader["id"]);
                 }
+                conn.Close();
             } else {
                 result[0] = 1;
                 result[1] = 0;
