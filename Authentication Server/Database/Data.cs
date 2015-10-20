@@ -34,7 +34,7 @@ namespace Authentication_Server.Database {
                         Name = Convert.ToString(reader["name"]),
                         Hostname = Convert.ToString(reader["address"]),
                         Port = Convert.ToInt32(reader["port"]),
-                        LastUsed = DateTime.MinValue
+                        RemoteIdentifier = String.Empty
                     });
 
                 }

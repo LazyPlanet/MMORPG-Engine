@@ -62,12 +62,12 @@ namespace Game_Client.Networking {
                 let name        = msg.ReadString()
                 let hostname    = msg.ReadString()
                 let port        = msg.ReadInt32()
-                let lastused    = DateTime.Parse(msg.ReadString())
-                select new Realm() { Name = name, Hostname = hostname, Port = port, LastUsed = lastused }
+                let online      = msg.ReadBoolean()
+                select new Realm() { Name = name, Hostname = hostname, Port = port, Online = online }
             );
             Console.WriteLine(String.Format("Received {0} Realms.", realms.Count));
             foreach (var realm in realms) {
-                Console.WriteLine(String.Format("- {0}\t{1}:{2}\t{3}", realm.Name, realm.Hostname, realm.Port, realm.LastUsed.ToString()));
+                Console.WriteLine(String.Format("- {0}\t{1}:{2}\t{3}", realm.Name, realm.Hostname, realm.Port, realm.Online.ToString()));
             }
         }
     }

@@ -3,10 +3,10 @@
 namespace Game_Client.Database {
     public class Realm {
 
-        private String rname = String.Empty;
-        private String rhost = String.Empty;
-        private Int32 rport = 0;
-        private DateTime rused = DateTime.MinValue;
+        private String rname        = String.Empty;
+        private String rhost        = String.Empty;
+        private Int32 rport         = 0;
+        private Boolean ronline     = false;
 
         public String Name {
             get { return rname; }
@@ -23,9 +23,9 @@ namespace Game_Client.Database {
             set { rport = value; }
         }
 
-        public DateTime LastUsed {
-            get { return rused; }
-            set { rused = value; }
+        public Boolean Online {
+            get { return ronline; }
+            set { ronline = value; }
         }
 
     }

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using Lidgren.Network;
 using Authentication_Server.Logging;
 using Authentication_Server.Database;
@@ -32,7 +33,11 @@ namespace Authentication_Server.Networking {
                 data.Write(item.Value.Name);
                 data.Write(item.Value.Hostname);
                 data.Write(item.Value.Port);
-                data.Write(item.Value.LastUsed.ToString());
+                data.Write(
+                    (from c in NetServer.Instance().Connections()
+                     select NetUtility.ToHexString(c.RemoteUniqueIdentifier))
+                     .Contains(item.Value.RemoteIdentifier) ? true : false
+                );
             }
             logger.Write(String.Format("Sending AuthSuccess to {0}", NetUtility.ToHexString(conn.RemoteUniqueIdentifier)), LogLevels.Debug);
             SendDataTo(conn, data);

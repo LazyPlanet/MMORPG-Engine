@@ -78,10 +78,10 @@ namespace Authentication_Server.Database {
 
     public class Realm {
 
-        private String rname = String.Empty;
-        private String rhost = String.Empty;
-        private Int32 rport = 0;
-        private DateTime rused = DateTime.MinValue;
+        private String rname        = String.Empty;
+        private String rhost        = String.Empty;
+        private Int32 rport         = 0;
+        private String ridentifier  = String.Empty;
 
         public String Name {
             get { return rname; }
@@ -98,9 +98,9 @@ namespace Authentication_Server.Database {
             set { rport = value; }
         }
 
-        public DateTime LastUsed {
-            get { return rused; }
-            set { rused = value; }
+        public String RemoteIdentifier {
+            get { return ridentifier; }
+            set { ridentifier = value; }
         }
 
     }
