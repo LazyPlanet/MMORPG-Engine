@@ -77,5 +77,9 @@ namespace Game_Client.Networking {
             netconn.Disconnect("Halting Client.");
         }
 
+        public void Reset() {
+            netconn = null;
+        }
+
     }
 }

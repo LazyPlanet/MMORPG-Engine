@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using Authentication_Server.Logging;
 
 namespace Authentication_Server.Database {
     public static class Data {
@@ -16,8 +17,9 @@ namespace Authentication_Server.Database {
         internal static void UpdateRealmList(object state) {
             var conn = DBConnection.Instance();
 
-            var list = RealmList.Instance();
-            var realms = new List<Realm>();
+            var list    = RealmList.Instance();
+            var realms  = new List<Realm>();
+            var logger  = Logger.Instance();
 
             // Make sure we've got our settings sorted out before moving on.
             SetupDBConnection(conn);
@@ -38,20 +40,22 @@ namespace Authentication_Server.Database {
                 }
                 conn.Close();
                 list.Fill(realms);
-                Console.WriteLine(String.Format("Successfully found {0} Realms.", realms.Count));
+                logger.Write(String.Format("Successfully found {0} Realms.", realms.Count), LogLevels.Informational);
             } else {
-                Console.WriteLine("Database Connection failed!");
+                logger.Write("Database Connection failed!", LogLevels.Normal);
             }
         }
 
         internal static void PurgeOldGuids(object state) {
-            var list = GUIDStore.Instance();
-            var count = list.RemoveOld();
-            Console.WriteLine(String.Format("Removed {0} expired Guids.", count));
+            var list    = GUIDStore.Instance();
+            var logger  = Logger.Instance();
+            var count   = list.RemoveOld();
+            logger.Write(String.Format("Removed {0} expired Guids.", count), LogLevels.Informational);
         }
 
         public static Int32[] AuthenticateUser(String user, String pass) {
-            var conn = DBConnection.Instance();
+            var conn    = DBConnection.Instance();
+            var logger  = Logger.Instance();
             Int32[] result = new Int32[2];
 
             // Make sure we've got our settings sorted out before moving on.
@@ -67,7 +71,7 @@ namespace Authentication_Server.Database {
             } else {
                 result[0] = 1;
                 result[1] = 0;
-                Console.WriteLine("Database Connection failed!");
+                logger.Write("Database Connection failed!", LogLevels.Normal);
             }
             return result;
         }

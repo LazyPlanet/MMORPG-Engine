@@ -36,7 +36,8 @@ namespace Authentication_Server.Networking {
                 if (netconn == null) 
                     { nethandler = value;
                 } else {
-                    throw new Exception("Unable to set MessageHandler after NetServer has been started.");
+                    var logger = Logging.Logger.Instance();
+                    logger.Write("Unable to set MessageHandler after NetServer has been started.", Logging.LogLevels.Debug);
                 }
             }
         }

@@ -62,7 +62,8 @@ namespace Authentication_Server.Database {
                         dbconn.Open();
                         result = true;
                     } catch (MySqlException e) {
-                        Console.WriteLine(e.Message);
+                        var logger = Logging.Logger.Instance();
+                        logger.Write(e.Message, Logging.LogLevels.Debug);
                         result = false;
                     }
                 }

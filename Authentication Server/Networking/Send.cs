@@ -1,5 +1,6 @@
 ﻿using System;
 using Lidgren.Network;
+using Authentication_Server.Logging;
 using Authentication_Server.Database;
 
 namespace Authentication_Server.Networking {
@@ -7,18 +8,23 @@ namespace Authentication_Server.Networking {
 
         private static void SendDataTo(NetConnection conn, NetBuffer data) {
             var server = NetServer.Instance();
+            var logger = Logger.Instance();
             server.Send(conn, data);
+            logger.Write(String.Format("Sending {0} Bytes to {1}", data.LengthBytes, NetUtility.ToHexString(conn.RemoteUniqueIdentifier)), LogLevels.Debug);
         }
 
         public static void AuthFailed(NetConnection conn) {
-            var data = new NetBuffer();
+            var data    = new NetBuffer();
+            var logger  = Logger.Instance();
             data.Write((Int32)Packets.Server.AuthFailed);
+            logger.Write(String.Format("Sending AuthFailed to {0}", NetUtility.ToHexString(conn.RemoteUniqueIdentifier)), LogLevels.Debug);
             SendDataTo(conn, data);
         }
 
         public static void AuthSuccess(NetConnection conn, Guid guid) {
-            var data = new NetBuffer();
-            var list = RealmList.Instance().GetRealms();
+            var data    = new NetBuffer();
+            var list    = RealmList.Instance().GetRealms();
+            var logger  = Logger.Instance();
             data.Write((Int32)Packets.Server.AuthSuccess);
             data.Write(guid.ToString());
             data.Write(list.Count);
@@ -28,6 +34,7 @@ namespace Authentication_Server.Networking {
                 data.Write(item.Port);
                 data.Write(item.LastUsed.ToString());
             }
+            logger.Write(String.Format("Sending AuthSuccess to {0}", NetUtility.ToHexString(conn.RemoteUniqueIdentifier)), LogLevels.Debug);
             SendDataTo(conn, data);
         }
 
