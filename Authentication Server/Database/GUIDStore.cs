@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 
 namespace Authentication_Server.Database {
@@ -57,6 +58,26 @@ namespace Authentication_Server.Database {
                 if (item.GUID == data) result = item.ID;
             }
 
+            // Release our mutex.
+            storagemutex = true;
+
+            return result;
+        }
+
+        public String[] GetList() {
+            // wait for our mutex to clear before we continue.
+            while (!storagemutex) {
+                Thread.Sleep(1);
+            }
+            // Claim our mutex.
+            storagemutex = false;
+
+            var result = (from i in storage
+                          let guid = i.GUID
+                          let age = DateTime.UtcNow.Subtract(i.TimeStamp).TotalHours
+                          select String.Format("GUID: {0} Age: {1}", guid, age)
+           ).ToArray();
+           
             // Release our mutex.
             storagemutex = true;
 

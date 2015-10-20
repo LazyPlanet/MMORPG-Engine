@@ -5,6 +5,8 @@ using Authentication_Server.Logging;
 namespace Authentication_Server.Database {
     public static class Data {
 
+        public static Boolean Running = true;
+
         private static void SetupDBConnection(DBConnection conn) {
             if (conn.Hostname == String.Empty) {
                 conn.Hostname       = Properties.Settings.Default["SqlHost"] as String;

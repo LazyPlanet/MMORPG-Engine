@@ -5,6 +5,7 @@ using System.Threading;
 using Authentication_Server.Logging;
 using Authentication_Server.Database;
 using Authentication_Server.Networking;
+using Server.Logic;
 
 namespace Authentication_Server {
     class Program {
@@ -40,8 +41,13 @@ namespace Authentication_Server {
             server.Open();
             logger.Write("Opened Server.", LogLevels.Normal);
 
-            Console.ReadLine();
+            while (Data.Running) {
+                Input.Process(Console.ReadLine());
+            }
 
+            // We're shutting down!
+            server.Close();
+            logger.Write("Networking Component Shut Down.", LogLevels.Normal);
         }
     }
 }

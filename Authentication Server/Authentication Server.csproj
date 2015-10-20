@@ -55,6 +55,7 @@
     <Compile Include="Database\DBConnection.cs" />
     <Compile Include="Database\GUIDStore.cs" />
     <Compile Include="Database\RealmList.cs" />
+    <Compile Include="Input\Input.cs" />
     <Compile Include="Logging\Logger.cs" />
     <Compile Include="Networking\Handlers.cs" />
     <Compile Include="Networking\NetServer.cs" />
