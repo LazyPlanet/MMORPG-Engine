@@ -1,12 +1,14 @@
 ﻿using System;
+using System.IO;
 using System.Threading;
 
 namespace Authentication_Server.Logging {
     public class Logger {
 
-        private         String      lfile;
-        private         LogLevels   llevel = LogLevels.Debug;
-        private         Boolean     lmutex = true;
+        private         String          lfile;
+        private         LogLevels       llevel = LogLevels.Debug;
+        private         Boolean         lmutex = true;
+        private         StreamWriter    file;
 
         private static  Logger  instance;
 
@@ -24,6 +26,8 @@ namespace Authentication_Server.Logging {
             // Check if we even need to handle this level.
             if (level < llevel) return;
 
+            if (file == null) file = System.IO.File.AppendText(lfile);
+
             // wait for our mutex to clear before we continue.
             while (!lmutex) {
                 Thread.Sleep(1);
@@ -33,9 +37,7 @@ namespace Authentication_Server.Logging {
 
             var msg = String.Format("[{0}][{1}] {2}", DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"), level.ToString(), input);
             Console.WriteLine(msg);
-            using (var file = System.IO.File.AppendText(lfile)) {
-                file.WriteLineAsync(msg);
-            }
+            file.WriteLineAsync(msg);
 
             // Release our mutex.
             lmutex = true;
