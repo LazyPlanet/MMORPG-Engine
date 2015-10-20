@@ -1,32 +1,27 @@
 ﻿using Game_Client.Networking;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Windows;
 
 namespace Game_Client {
     class Program {
 
+        [STAThread]
         static void Main(string[] args) {
 
-            Console.WriteLine("Press Enter to connect.");
-            Console.ReadLine();
-
+            // Instantiate our network client and attempt to connect in the background.
             var client = NetClient.Instance();
             client.Hostname         = Properties.Settings.Default["Hostname"] as String;
             client.Port             = (Int32)Properties.Settings.Default["Port"];
             client.MessageHandler   = Handlers.HandleNetMessage;
+            client.Connect();
 
-            if (client.Connect()) {
-                Console.WriteLine("Connected!\nEnter your username.");
-                var user = Console.ReadLine();
-                Console.WriteLine("Enter your password.");
-                var pass = Console.ReadLine();
-                Console.WriteLine("Sending Login Request.");
-                Send.LoginRequest(user, pass);
-                Console.ReadLine();
-            }
+            // Start our form and handle everything from there.
+            var app = new Application();
+            app.Run(MainWindow.Instance());
+
+            // We've reached the end of our application's life.
+            // Au Reviours my friend.
+            // All jokes aside, let's unload everything we've managed to load during our run.
             client.Close();
 
         }

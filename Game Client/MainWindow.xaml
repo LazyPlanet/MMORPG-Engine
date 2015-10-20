@@ -1,0 +1,32 @@
+﻿<Window x:Class="Game_Client.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Game_Client"
+        mc:Ignorable="d"
+        Title="Project Chimera" Height="350" Width="525" SizeToContent="WidthAndHeight" WindowStartupLocation="CenterScreen">
+    <Grid>
+
+        <Grid Name="LoginMenu" HorizontalAlignment="Center" Height="299" Margin="0,0,0,0" VerticalAlignment="Center" Width="497">
+            <GroupBox x:Name="logingroup" Header="Login" HorizontalAlignment="Center" Margin="0,0,0,0" VerticalAlignment="Center" Height="182" Width="178">
+                <Grid Margin="0,0,0,-12">
+                    <Label x:Name="lbluser" Content="Username:" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top"/>
+                    <TextBox x:Name="txtusername" HorizontalAlignment="Left" Height="23" Margin="10,36,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="146"/>
+                    <Label x:Name="lblpass" Content="Password:" HorizontalAlignment="Left" Margin="10,64,0,0" VerticalAlignment="Top" RenderTransformOrigin="0.424,0.115"/>
+                    <PasswordBox x:Name="txtpassword" HorizontalAlignment="Left" Margin="10,95,0,0" VerticalAlignment="Top" Height="23" PasswordChar="*" Width="146"/>
+                    <Button x:Name="btnlogin" Content="Login" HorizontalAlignment="Left" Margin="81,142,0,0" VerticalAlignment="Top" Width="75" Click="btnlogin_Click"/>
+                </Grid>
+            </GroupBox>
+        </Grid>
+
+        <Grid Name="RealmListMenu" HorizontalAlignment="Center" Height="299" Margin="0,0,0,0" VerticalAlignment="Center" Width="497" Visibility="Hidden" >
+            <GroupBox x:Name="realmgroup" Header="Select Realm" HorizontalAlignment="Center" Margin="0,0,0,0" VerticalAlignment="Center" Height="182" Width="178">
+                <Grid Margin="0,0,0,-12">
+                    <ListBox x:Name="lstrealms" HorizontalAlignment="Left" Height="127" Margin="10,10,0,0" VerticalAlignment="Top" Width="146"/>
+                    <Button x:Name="btnconnect" Content="Connect" HorizontalAlignment="Center" Margin="0,0,0,10" VerticalAlignment="Bottom" Width="75" Click="btnconnect_Click"/>
+                </Grid>
+            </GroupBox>
+        </Grid>
+    </Grid>
+</Window>

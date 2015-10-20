@@ -37,7 +37,7 @@ namespace Realm_Server.Logging {
 
             var msg = String.Format("[{0}][{1}] {2}", DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"), level.ToString(), input);
             Console.WriteLine(msg);
-            file.WriteLineAsync(msg);
+            file.WriteLine(msg);
 
             // Release our mutex.
             lmutex = true;
