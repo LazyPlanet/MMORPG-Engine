@@ -53,7 +53,7 @@ namespace Game_Client.Networking {
         }
 
         private static void HandleAuthSuccess(NetIncomingMessage msg) {
-            var guid    = Guid.Parse(msg.ReadString());
+            Data.MyGUID = Guid.Parse(msg.ReadString());
             var count   = msg.ReadInt32();
             Data.RealmList.Clear();
             Data.RealmList.AddRange(
