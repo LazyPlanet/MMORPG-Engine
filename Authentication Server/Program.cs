@@ -29,8 +29,10 @@ namespace Authentication_Server {
             logger.Write(String.Format("Server will bind to: {0}:{1} for a maximum of {2} connections.", server.BindAddress, server.BindPort, server.MaxConnections), LogLevels.Informational);
             logger.Write("Initialized Networking Component.", LogLevels.Normal);
 
+            // Retrieve our realm list.
+            Data.UpdateRealmList();
+
             // Set up our timers that will periodically perform some background work.
-            var RealmListTimer      = new Timer(new TimerCallback(Data.UpdateRealmList), null, 0, 60000);       // Every minute.
             var GuidRemovalTimer    = new Timer(new TimerCallback(Data.PurgeOldGuids), null, 0, 900000);        // Every 15 minutes.
             logger.Write("Initialized Timed Logic Components.", LogLevels.Normal);
 

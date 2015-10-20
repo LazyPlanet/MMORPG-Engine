@@ -16,11 +16,11 @@ namespace Authentication_Server.Database {
                 conn.Password       = Properties.Settings.Default["SqlPassword"] as String;
             }
         }
-        internal static void UpdateRealmList(object state) {
+        public static void UpdateRealmList() {
             var conn = DBConnection.Instance();
 
             var list    = RealmList.Instance();
-            var realms  = new List<Realm>();
+            var realms  = new Dictionary<Int32, Realm>();
             var logger  = Logger.Instance();
 
             // Make sure we've got our settings sorted out before moving on.
@@ -30,13 +30,11 @@ namespace Authentication_Server.Database {
             if (conn.Connect()) {
                 var reader = conn.ExecuteSqlReader(@"SELECT * from RealmList");
                 while (reader.Read()) {
-                    realms.Add(new Realm() {
-                        Name        = Convert.ToString(reader["name"]),
-                        Hostname    = Convert.ToString(reader["address"]),
-                        Port        = Convert.ToInt32(reader["port"]),
-                        LastUsed    = reader["lastactive"] == DBNull.Value 
-                                        ? DateTime.MinValue 
-                                        : Convert.ToDateTime(reader["lastactive"])
+                    realms.Add(Convert.ToInt32(reader["id"]), new Realm() {
+                        Name = Convert.ToString(reader["name"]),
+                        Hostname = Convert.ToString(reader["address"]),
+                        Port = Convert.ToInt32(reader["port"]),
+                        LastUsed = DateTime.MinValue
                     });
 
                 }

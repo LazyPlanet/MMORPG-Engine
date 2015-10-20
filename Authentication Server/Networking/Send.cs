@@ -29,10 +29,10 @@ namespace Authentication_Server.Networking {
             data.Write(guid.ToString());
             data.Write(list.Count);
             foreach (var item in list) {
-                data.Write(item.Name);
-                data.Write(item.Hostname);
-                data.Write(item.Port);
-                data.Write(item.LastUsed.ToString());
+                data.Write(item.Value.Name);
+                data.Write(item.Value.Hostname);
+                data.Write(item.Value.Port);
+                data.Write(item.Value.LastUsed.ToString());
             }
             logger.Write(String.Format("Sending AuthSuccess to {0}", NetUtility.ToHexString(conn.RemoteUniqueIdentifier)), LogLevels.Debug);
             SendDataTo(conn, data);

@@ -14,14 +14,17 @@ namespace Server.Logic {
         private static Dictionary<String, Action<Object[]>> commands = new Dictionary<String, Action<Object[]>>() {
             { "close",  Shutdown}, { "exit",  Shutdown}, { "shutdown",  Shutdown},
             { "help", Help },
-            { "list", List }
+            { "list", List },
+            { "update", Update }
         };
+
         private static Dictionary<String, String> helplist = new Dictionary<String, String>() {
             { "close", "Shuts down the server and saves all currently loaded information to disk." },
             { "exit", "Shuts down the server and saves all currently loaded information to disk." },
             { "shutdown", "Shuts down the server and saves all currently loaded information to disk." },
             { "help", "Provides help for every command available in this program.\n- Use 'help' to get a list of available commands.\n- Use 'help command' to get more detailed information about a command." },
-            { "list", "Lists all currently available entries loaded into the server for the specified item.\n- Use list 'type' to get a list of all available items of that type.\n- Available types include: guids, connections" }
+            { "list", "Lists all currently available entries loaded into the server for the specified item.\n- Use list 'type' to get a list of all available items of that type.\n- Available types include: guids, connections" },
+            { "update", "Allows the updating of internal data taken from the database for specific items.\n- Use update 'type' to retrieve new data from the database.\n- Available types include: realms" }
         };
 
         public static void Process(String input) {
@@ -80,6 +83,21 @@ namespace Server.Logic {
                 Console.WriteLine(help);
             } else {
                 Console.WriteLine(String.Format("All available commands follow. Please use 'help command' to get a more detailed overview.\n{0}", (from c in commands orderby c.Key select c.Key).ToArray().Aggregate((i, j) => i + ", " + j)));
+            }
+        }
+
+        private static void Update(Object[] args) {
+            if (args.Length > 0) {
+                switch (((String)args[0]).ToLower()) {
+
+                    case "realms":
+                        Console.WriteLine("Updating Realm List.");
+                        Data.UpdateRealmList();
+                    break;
+
+                }
+            } else {
+                Console.WriteLine("Unknown request.");
             }
         }
     }

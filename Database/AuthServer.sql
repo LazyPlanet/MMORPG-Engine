@@ -37,7 +37,6 @@ CREATE TABLE `Realms` (
   `name` varchar(50) NOT NULL,
   `address` varchar(15) NOT NULL,
   `port` int(11) NOT NULL,
-  `lastactive` datetime DEFAULT NULL,
   `visible` int(11) NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
@@ -206,10 +205,10 @@ DROP TABLE IF EXISTS `RealmList`;
 /*!50001 DROP TABLE IF EXISTS `RealmList` */;
 
 /*!50001 CREATE TABLE  `RealmList`(
+ `id` int(11) ,
  `name` varchar(50) ,
  `address` varchar(15) ,
- `port` int(11) ,
- `lastactive` datetime 
+ `port` int(11) 
 )*/;
 
 /*View structure for view RealmList */
@@ -217,7 +216,7 @@ DROP TABLE IF EXISTS `RealmList`;
 /*!50001 DROP TABLE IF EXISTS `RealmList` */;
 /*!50001 DROP VIEW IF EXISTS `RealmList` */;
 
-/*!50001 CREATE ALGORITHM=UNDEFINED DEFINER=`silvester`@`%` SQL SECURITY DEFINER VIEW `RealmList` AS (select `Realms`.`name` AS `name`,`Realms`.`address` AS `address`,`Realms`.`port` AS `port`,`Realms`.`lastactive` AS `lastactive` from `Realms` where (`Realms`.`visible` = 1)) */;
+/*!50001 CREATE ALGORITHM=UNDEFINED DEFINER=`silvester`@`%` SQL SECURITY DEFINER VIEW `RealmList` AS (select `Realms`.`id` AS `id`,`Realms`.`name` AS `name`,`Realms`.`address` AS `address`,`Realms`.`port` AS `port` from `Realms` where (`Realms`.`visible` = 1)) */;
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
 /*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;

@@ -13,8 +13,8 @@ namespace Game_Client.Networking {
         };
 
         public static void HandleNetMessage(object state) {
-            var peer = state as NetPeer;
-            var msg = peer.ReadMessage();
+            var peer    = state as NetPeer;
+            var msg     = peer.ReadMessage();
 
             switch (msg.MessageType) {
 

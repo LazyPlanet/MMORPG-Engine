@@ -5,12 +5,12 @@ using System.Threading;
 namespace Authentication_Server.Database {
     public class RealmList {
 
-        private         List<Realm> storage         = new List<Realm>();
-        private         Boolean     storagemutex    = true;
+        private         Dictionary<Int32, Realm>    storage         = new Dictionary<Int32, Realm>();
+        private         Boolean                     storagemutex    = true;
 
         private static  RealmList   rlstore;
 
-        public List<Realm> GetRealms() {
+        public Dictionary<Int32, Realm> GetRealms() {
             // wait for our mutex to clear before we continue.
             while (!storagemutex) {
                 Thread.Sleep(1);
@@ -40,7 +40,7 @@ namespace Authentication_Server.Database {
             storagemutex = true;
         }
 
-        public void Fill(List<Realm> data) {
+        public void Fill(Dictionary<Int32, Realm> data) {
             Clear();
 
             // wait for our mutex to clear before we continue.
