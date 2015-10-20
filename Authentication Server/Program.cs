@@ -10,9 +10,6 @@ using Server.Logic;
 namespace Authentication_Server {
     class Program {
 
-        private static Timer RealmListTimer;
-        private static Timer GuidRemovalTimer;
-
         static void Main(string[] args) {
 
             // Initialize our logging.
@@ -33,8 +30,8 @@ namespace Authentication_Server {
             logger.Write("Initialized Networking Component.", LogLevels.Normal);
 
             // Set up our timers that will periodically perform some background work.
-            RealmListTimer      = new Timer(new TimerCallback(Data.UpdateRealmList), null, 0, 60000);
-            GuidRemovalTimer    = new Timer(new TimerCallback(Data.PurgeOldGuids), null, 0, 900000);
+            var RealmListTimer      = new Timer(new TimerCallback(Data.UpdateRealmList), null, 0, 60000);       // Every minute.
+            var GuidRemovalTimer    = new Timer(new TimerCallback(Data.PurgeOldGuids), null, 0, 900000);        // Every 15 minutes.
             logger.Write("Initialized Timed Logic Components.", LogLevels.Normal);
 
             // Start the server! We're done loading.
