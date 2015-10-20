@@ -4,11 +4,11 @@
 using System;
 using System.Linq;
 using Lidgren.Network;
+using Realm_Server.Logging;
+using Realm_Server.Database;
 using System.Collections.Generic;
-using Authentication_Server.Logging;
-using Authentication_Server.Database;
 
-namespace Server.Logic {
+namespace Realm_Server.Logic {
     public static class Input {
 
         private static Dictionary<String, Action<Object[]>> commands = new Dictionary<String, Action<Object[]>>() {
@@ -59,16 +59,7 @@ namespace Server.Logic {
             var logger = Logger.Instance();
             if (args.Length > 0) {
                 switch (((String)args[0]).ToLower()) {
-                    case "guids":
-                        foreach (var item in GUIDStore.Instance().GetList()) {
-                            Console.WriteLine(item);
-                        }
-                    break;
-                    case "connections":
-                        foreach (var conn in Authentication_Server.Networking.NetServer.Instance().GetPeer().Connections) {
-                            Console.WriteLine(String.Format("ID: {0} Remote: {1}", NetUtility.ToHexString(conn.RemoteUniqueIdentifier), String.Format("{0}:{1}", conn.RemoteEndPoint.Address, conn.RemoteEndPoint.Port)));
-                        }
-                    break;
+
                 }
             } else {
                 Console.WriteLine("Unknown list.");
@@ -91,10 +82,6 @@ namespace Server.Logic {
             if (args.Length > 0) {
                 switch (((String)args[0]).ToLower()) {
 
-                    case "realms":
-                        Console.WriteLine("Updating Realm List.");
-                        Data.UpdateRealmList();
-                    break;
 
                 }
             } else {

@@ -65,6 +65,25 @@ namespace Authentication_Server.Database {
             storagemutex = false;
         }
 
+        public Boolean UpdateRealmStatus(Int32 id, String remoteidentifier) {
+            if (!storage.ContainsKey(id)) return false;
+
+            // wait for our mutex to clear before we continue.
+            while (!storagemutex) {
+                Thread.Sleep(1);
+            }
+            // Claim our mutex.
+            storagemutex = false;
+
+            storage[id].RemoteIdentifier = remoteidentifier;
+
+            // Release our mutex.
+            storagemutex = true;
+
+            return true;
+
+        }
+
         public void ReleaseMutex() {
             storagemutex = true;
         }

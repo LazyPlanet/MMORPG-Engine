@@ -9,6 +9,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Lidgren.Network", "Lidgren.
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Game Client", "Game Client\Game Client.csproj", "{F3699B21-893E-4026-80FB-9C52BCABA3C7}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Realm Server", "Realm Server\Realm Server.csproj", "{7773B652-63F3-4291-9B7F-1EC7E1295460}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -27,6 +29,10 @@ Global
 		{F3699B21-893E-4026-80FB-9C52BCABA3C7}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F3699B21-893E-4026-80FB-9C52BCABA3C7}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F3699B21-893E-4026-80FB-9C52BCABA3C7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7773B652-63F3-4291-9B7F-1EC7E1295460}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7773B652-63F3-4291-9B7F-1EC7E1295460}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7773B652-63F3-4291-9B7F-1EC7E1295460}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7773B652-63F3-4291-9B7F-1EC7E1295460}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

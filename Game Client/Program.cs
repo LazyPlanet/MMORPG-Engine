@@ -24,7 +24,7 @@ namespace Game_Client {
                 Console.WriteLine("Enter your password.");
                 var pass = Console.ReadLine();
                 Console.WriteLine("Sending Login Request.");
-                Send.SendLoginRequest(user, pass);
+                Send.LoginRequest(user, pass);
                 Console.ReadLine();
             }
             client.Close();

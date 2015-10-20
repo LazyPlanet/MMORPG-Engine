@@ -55,7 +55,19 @@ namespace Authentication_Server.Networking {
         }
 
         private static void HandleActivePing(NetIncomingMessage msg) {
-            throw new NotImplementedException();
+            var logger  = Logger.Instance();
+            var list    = RealmList.Instance();
+            logger.Write(String.Format("Received ActivePing from {0}", NetUtility.ToHexString(msg.SenderConnection.RemoteUniqueIdentifier)), LogLevels.Informational);
+
+            // Retrieve our ID.
+            var id = msg.ReadInt32();
+
+            // Update our realm, if we have one.
+            if (list.UpdateRealmStatus(id, NetUtility.ToHexString(msg.SenderConnection.RemoteUniqueIdentifier))) {
+                logger.Write(String.Format("Realm ID: {0} connected with RemoteIdentifier: {1}", id, NetUtility.ToHexString(msg.SenderConnection.RemoteUniqueIdentifier)), LogLevels.Debug);
+            } else {
+                logger.Write(String.Format("Realm ID: {0} failed to provide a valid RealmId.", NetUtility.ToHexString(msg.SenderConnection.RemoteUniqueIdentifier)), LogLevels.Debug);
+            }
         }
         private static void HandleLoginRequest(NetIncomingMessage msg) {
             var logger = Logger.Instance();

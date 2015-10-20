@@ -1,7 +1,7 @@
 ﻿using System;
 using Lidgren.Network;
 
-namespace Game_Client.Networking {
+namespace Realm_Server.Networking {
     public static class Send {
 
         private static void SendData(NetBuffer data) {
@@ -9,11 +9,10 @@ namespace Game_Client.Networking {
             client.Send(data);
         }
 
-        public static void LoginRequest(String user, String pass) {
+        public static void ActivePing(Int32 id) {
             var data = new NetBuffer();
-            data.Write((Int32)Packets.Client.LoginRequest);
-            data.Write(user);
-            data.Write(pass);
+            data.Write((Int32)Packets.Client.ActivePing);
+            data.Write(id);
             SendData(data);
         }
 
