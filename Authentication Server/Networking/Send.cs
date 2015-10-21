@@ -43,5 +43,29 @@ namespace Authentication_Server.Networking {
             SendDataTo(conn, data);
         }
 
+        public static void GuidOK(NetConnection conn, Guid guid) {
+            var data    = new NetBuffer();
+            var logger  = Logger.Instance();
+            var store   = GUIDStore.Instance();
+
+            data.Write((Int32)Packets.Server.GuidOK);
+            data.Write(guid.ToString());
+            data.Write(store.GetID(guid));
+
+            logger.Write(String.Format("Sending GuidOK to {0}", NetUtility.ToHexString(conn.RemoteUniqueIdentifier)), LogLevels.Debug);
+            SendDataTo(conn, data);
+        }
+
+        public static void GuidError(NetConnection conn, Guid guid) {
+            var data = new NetBuffer();
+            var logger = Logger.Instance();
+
+            data.Write((Int32)Packets.Server.GuidError);
+            data.Write(guid.ToString());
+
+            logger.Write(String.Format("Sending GuidError to {0}", NetUtility.ToHexString(conn.RemoteUniqueIdentifier)), LogLevels.Debug);
+            SendDataTo(conn, data);
+        }
+
     }
 }

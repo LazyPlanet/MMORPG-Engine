@@ -10,6 +10,7 @@ namespace Authentication_Server.Networking {
         private static Dictionary<Packets.Client, Action<NetIncomingMessage>> Handler = new Dictionary<Packets.Client, Action<NetIncomingMessage>>() {
             { Packets.Client.LoginRequest,    HandleLoginRequest },
             { Packets.Client.ActivePing,      HandleActivePing },
+            { Packets.Client.ConfirmGuid,     HandleConfirmGuid },
         };
 
         public static void HandleNetMessage(object state) {
@@ -100,6 +101,25 @@ namespace Authentication_Server.Networking {
                 // Tell our user they entered incorrect information.
                 Send.AuthFailed(msg.SenderConnection);
             }
+        }
+
+        private static void HandleConfirmGuid(NetIncomingMessage msg) {
+            var logger = Logger.Instance();
+            logger.Write(String.Format("Received ConfirmGuid from {0}", NetUtility.ToHexString(msg.SenderConnection.RemoteUniqueIdentifier)), LogLevels.Informational);
+            var store = GUIDStore.Instance();
+
+            // See if our storage contains this Guid.
+            var guid = Guid.Parse(msg.ReadString());
+            if (store.Contains(guid)) {
+                // Yes it does, we can accept this client.
+                logger.Write(String.Format("GUID: {0} Exists, allowing user on.", guid), LogLevels.Debug);
+                Send.GuidOK(msg.SenderConnection, guid);
+            } else {
+                // No it doesn't, where did they come from?
+                logger.Write(String.Format("GUID: {0} Does NotExists, notify user.", guid), LogLevels.Debug);
+                Send.GuidError(msg.SenderConnection, guid);
+            }
+            
         }
 
     }

@@ -1,4 +1,5 @@
 ﻿using Lidgren.Network;
+using Realm_Server.Database;
 using Realm_Server.Logging;
 using System;
 using System.Collections.Generic;
@@ -7,7 +8,8 @@ namespace Realm_Server.Networking {
     public static class ClientHandlers {
 
         private static Dictionary<Packets.Server, Action<NetIncomingMessage>> Handler = new Dictionary<Packets.Server, Action<NetIncomingMessage>>() {
-
+            { Packets.Server.GuidOK,    HandleGuidOk },
+            { Packets.Server.GuidError, HandleGuidError },
         };
 
         public static void HandleNetMessage(object state) {
@@ -48,6 +50,36 @@ namespace Realm_Server.Networking {
 
             // Recycle the message.
             peer.Recycle(msg);
+        }
+
+        private static void HandleGuidError(NetIncomingMessage msg) {
+            var logger  = Logger.Instance();
+            var store   = PlayerStore.Instance();
+            var guid    = Guid.Parse(msg.ReadString());
+            var server  = NetServer.Instance();
+            logger.Write(String.Format("Received HandleGuidError From Authentication Server for GUID: {0}", guid), LogLevels.Informational);
+
+            // Get our network peer ID and the accompanying connection.
+            var netid = store.GetIdentifierFromGuid(guid);
+            var conn = server.GetConnectionFromId(netid);
+        }
+
+        private static void HandleGuidOk(NetIncomingMessage msg) {
+            var logger  = Logger.Instance();
+            var store   = PlayerStore.Instance();
+            var guid    = Guid.Parse(msg.ReadString());
+            var id      = msg.ReadInt32();
+            var server = NetServer.Instance();
+            logger.Write(String.Format("Received HandleGuidOK From Authentication Server for GUID: {0}", guid), LogLevels.Informational);
+
+            // Get our network peer ID and the accompanying connection.
+            var netid = store.GetIdentifierFromGuid(guid);
+            var conn = server.GetConnectionFromId(netid);
+
+            // TODO: Check if user is already logged on, and if so kick them.
+
+            // Set the user's database ID for future reference.
+            store.SetDatabaseId(netid, id);
         }
     }
 }

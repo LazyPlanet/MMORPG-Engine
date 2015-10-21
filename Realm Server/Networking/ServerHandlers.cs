@@ -1,4 +1,5 @@
 ﻿using Lidgren.Network;
+using Realm_Server.Database;
 using Realm_Server.Logging;
 using System;
 using System.Collections.Generic;
@@ -53,13 +54,23 @@ namespace Realm_Server.Networking {
 
         private static void HandleAuthenticateClient(NetIncomingMessage msg) {
             var logger = Logger.Instance();
-            logger.Write(String.Format("Received AuthenticateClient from {0}", NetUtility.ToHexString(msg.SenderConnection.RemoteUniqueIdentifier)), LogLevels.Informational);
+            var netid = NetUtility.ToHexString(msg.SenderConnection.RemoteUniqueIdentifier);
+            logger.Write(String.Format("Received AuthenticateClient from {0}", netid), LogLevels.Informational);
 
             // Get our user.
             var user = NetUtility.ToHexString(msg.SenderConnection.RemoteUniqueIdentifier);
 
             // Get our GUID.
             var guid = Guid.Parse(msg.ReadString());
+
+            // Create a new user and add their (currently known) data.
+            var store = PlayerStore.Instance();
+            store.AddPlayer(netid);
+            store.SetAuthorizationId(netid, guid);
+            logger.Write(String.Format("Adding new Player with GUID: {0} AuthorizationID: {1}", guid, netid), LogLevels.Debug);
+
+            // Try and confirm this guid with our authentication server.
+            Send.ConfirmGuid(guid);
         }
     }
 }

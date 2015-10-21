@@ -48,6 +48,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Database\Data.cs" />
+    <Compile Include="Database\PlayerStore.cs" />
     <Compile Include="Input\Input.cs" />
     <Compile Include="Logging\Logger.cs" />
     <Compile Include="Networking\NetClient.cs" />

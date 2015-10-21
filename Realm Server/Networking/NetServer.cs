@@ -3,6 +3,7 @@ using System.Net;
 using System.Threading;
 using Lidgren.Network;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Realm_Server.Networking {
     public class NetServer {
@@ -75,6 +76,15 @@ namespace Realm_Server.Networking {
             var msg = netconn.CreateMessage();
             msg.Write(data);
             netconn.SendMessage(msg, conn, NetDeliveryMethod.ReliableOrdered);
+        }
+
+        public NetConnection GetConnectionFromId(String id) {
+            // get a copy of our current list.
+            var connections = netconn.Connections;
+
+            return (
+                from conn in connections where NetUtility.ToHexString(conn.RemoteUniqueIdentifier).Equals(id) select conn    
+            ).Single();
         }
 
         public Lidgren.Network.NetServer GetPeer() {

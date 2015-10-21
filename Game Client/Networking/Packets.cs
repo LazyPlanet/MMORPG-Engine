@@ -4,12 +4,15 @@
         public enum Client {
             LoginRequest,
             ActivePing,
-            AuthenticateClient
+            AuthenticateClient,
+            ConfirmGuid,
         }
 
         public enum Server {
             AuthFailed,
-            AuthSuccess
+            AuthSuccess,
+            GuidOK,
+            GuidError,
         }
 
     }

@@ -24,8 +24,8 @@ namespace Realm_Server.Logic {
             { "exit", "Shuts down the server and saves all currently loaded information to disk." },
             { "shutdown", "Shuts down the server and saves all currently loaded information to disk." },
             { "help", "Provides help for every command available in this program.\n- Use 'help' to get a list of available commands.\n- Use 'help command' to get more detailed information about a command." },
-            { "list", "Lists all currently available entries loaded into the server for the specified item.\n- Use list 'type' to get a list of all available items of that type.\n- Available types include: guids, connections" },
-            { "update", "Allows the updating of internal data taken from the database for specific items.\n- Use update 'type' to retrieve new data from the database.\n- Available types include: realms" }
+            { "list", "Lists all currently available entries loaded into the server for the specified item.\n- Use list 'type' to get a list of all available items of that type.\n- Available types include: connections" },
+            { "update", "Allows the updating of internal data taken from the database for specific items.\n- Use update 'type' to retrieve new data from the database.\n- Available types include: " }
         };
 
         public static void Process(String input) {
@@ -59,7 +59,11 @@ namespace Realm_Server.Logic {
             var logger = Logger.Instance();
             if (args.Length > 0) {
                 switch (((String)args[0]).ToLower()) {
-
+                    case "connections":
+                        foreach (var conn in Realm_Server.Networking.NetServer.Instance().GetPeer().Connections) {
+                            Console.WriteLine(String.Format("ID: {0} Remote: {1}", NetUtility.ToHexString(conn.RemoteUniqueIdentifier), String.Format("{0}:{1}", conn.RemoteEndPoint.Address, conn.RemoteEndPoint.Port)));
+                        }
+                    break;
                 }
             } else {
                 Console.WriteLine("Unknown list.");

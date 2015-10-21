@@ -20,7 +20,7 @@ namespace Game_Client {
             app.Run(MainWindow.Instance());
 
             // We've reached the end of our application's life.
-            // Au Reviours my friend.
+            // Au Revoir my friend.
             // All jokes aside, let's unload everything we've managed to load during our run.
             client.Close();
 
