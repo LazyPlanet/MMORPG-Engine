@@ -11,7 +11,7 @@ namespace Realm_Server.Database {
 
         private static PlayerStore instance;
 
-        public Boolean Contains(String guid) {
+        public Boolean Contains(String netid) {
             // wait for our mutex to clear before we continue.
             while (!storagemutex) {
                 Thread.Sleep(1);
@@ -19,14 +19,14 @@ namespace Realm_Server.Database {
             // Claim our mutex.
             storagemutex = false;
 
-            var result = storage.ContainsKey(guid);
+            var result = storage.ContainsKey(netid);
 
             // Release our mutex.
             storagemutex = true;
 
             return result;
         }
-        public void AddPlayer(String guid) {
+        public void AddPlayer(String netid) {
             // wait for our mutex to clear before we continue.
             while (!storagemutex) {
                 Thread.Sleep(1);
@@ -34,12 +34,12 @@ namespace Realm_Server.Database {
             // Claim our mutex.
             storagemutex = false;
 
-            storage.Add(guid, new PlayerData());
+            storage.Add(netid, new PlayerData());
 
             // Release our mutex.
             storagemutex = true;
         }
-        public void RemovePlayer(String guid) {
+        public void RemovePlayer(String netid) {
             // wait for our mutex to clear before we continue.
             while (!storagemutex) {
                 Thread.Sleep(1);
@@ -47,7 +47,7 @@ namespace Realm_Server.Database {
             // Claim our mutex.
             storagemutex = false;
 
-            storage.Remove(guid);
+            storage.Remove(netid);
 
             // Release our mutex.
             storagemutex = true;
@@ -72,7 +72,7 @@ namespace Realm_Server.Database {
             return result;
         }
 
-        public void SetDatabaseId(String guid, Int32 id) {
+        public void SetDatabaseId(String netid, Int32 id) {
             // wait for our mutex to clear before we continue.
             while (!storagemutex) {
                 Thread.Sleep(1);
@@ -80,12 +80,12 @@ namespace Realm_Server.Database {
             // Claim our mutex.
             storagemutex = false;
 
-            storage[guid].DatabaseId = id;
+            storage[netid].DatabaseId = id;
 
             // Release our mutex.
             storagemutex = true;
         }
-        public Int32 GetDatabaseId(String guid) {
+        public Int32 GetDatabaseId(String netid) {
             // wait for our mutex to clear before we continue.
             while (!storagemutex) {
                 Thread.Sleep(1);
@@ -93,14 +93,14 @@ namespace Realm_Server.Database {
             // Claim our mutex.
             storagemutex = false;
 
-            var result = storage[guid].DatabaseId;
+            var result = storage[netid].DatabaseId;
 
             // Release our mutex.
             storagemutex = true;
 
             return result;
         }
-        public void SetAuthorizationId(String guid, Guid id) {
+        public void SetAuthorizationId(String netid, Guid guid) {
             // wait for our mutex to clear before we continue.
             while (!storagemutex) {
                 Thread.Sleep(1);
@@ -108,12 +108,12 @@ namespace Realm_Server.Database {
             // Claim our mutex.
             storagemutex = false;
 
-            storage[guid].AuthorizationId = id;
+            storage[netid].AuthorizationId = guid;
 
             // Release our mutex.
             storagemutex = true;
         }
-        public Guid GetAuthorizationId(String guid) {
+        public Guid GetAuthorizationId(String netid) {
             // wait for our mutex to clear before we continue.
             while (!storagemutex) {
                 Thread.Sleep(1);
@@ -121,7 +121,7 @@ namespace Realm_Server.Database {
             // Claim our mutex.
             storagemutex = false;
 
-            var result = storage[guid].AuthorizationId;
+            var result = storage[netid].AuthorizationId;
 
             // Release our mutex.
             storagemutex = true;
