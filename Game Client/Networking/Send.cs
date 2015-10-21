@@ -17,5 +17,12 @@ namespace Game_Client.Networking {
             SendData(data);
         }
 
+        public static void AuthenticateClient(Guid guid) {
+            var data = new NetBuffer();
+            data.Write((Int32)Packets.Client.AuthenticateClient);
+            data.Write(guid.ToString());
+            SendData(data);
+        }
+
     }
 }

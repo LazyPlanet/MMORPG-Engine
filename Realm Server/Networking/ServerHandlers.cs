@@ -7,7 +7,7 @@ namespace Realm_Server.Networking {
     public static class ServerHandlers {
 
         private static Dictionary<Packets.Client, Action<NetIncomingMessage>> Handler = new Dictionary<Packets.Client, Action<NetIncomingMessage>>() {
-            
+            { Packets.Client.AuthenticateClient, HandleAuthenticateClient }
         };
 
         public static void HandleNetMessage(object state) {
@@ -49,7 +49,17 @@ namespace Realm_Server.Networking {
 
             // Recycle the message.
             peer.Recycle(msg);
+        }
 
+        private static void HandleAuthenticateClient(NetIncomingMessage msg) {
+            var logger = Logger.Instance();
+            logger.Write(String.Format("Received AuthenticateClient from {0}", NetUtility.ToHexString(msg.SenderConnection.RemoteUniqueIdentifier)), LogLevels.Informational);
+
+            // Get our user.
+            var user = NetUtility.ToHexString(msg.SenderConnection.RemoteUniqueIdentifier);
+
+            // Get our GUID.
+            var guid = Guid.Parse(msg.ReadString());
         }
     }
 }

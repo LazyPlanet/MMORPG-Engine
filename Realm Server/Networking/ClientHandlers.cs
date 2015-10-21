@@ -7,7 +7,7 @@ namespace Realm_Server.Networking {
     public static class ClientHandlers {
 
         private static Dictionary<Packets.Server, Action<NetIncomingMessage>> Handler = new Dictionary<Packets.Server, Action<NetIncomingMessage>>() {
-            
+
         };
 
         public static void HandleNetMessage(object state) {
@@ -48,7 +48,6 @@ namespace Realm_Server.Networking {
 
             // Recycle the message.
             peer.Recycle(msg);
-
         }
     }
 }

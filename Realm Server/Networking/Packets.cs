@@ -3,7 +3,8 @@
 
         public enum Client {
             LoginRequest,
-            ActivePing
+            ActivePing,
+            AuthenticateClient
         }
 
         public enum Server {

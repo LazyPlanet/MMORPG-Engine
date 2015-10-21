@@ -16,6 +16,7 @@
                     <Label x:Name="lblpass" Content="Password:" HorizontalAlignment="Left" Margin="10,64,0,0" VerticalAlignment="Top" RenderTransformOrigin="0.424,0.115"/>
                     <PasswordBox x:Name="txtpassword" HorizontalAlignment="Left" Margin="10,95,0,0" VerticalAlignment="Top" Height="23" PasswordChar="*" Width="146"/>
                     <Button x:Name="btnlogin" Content="Login" HorizontalAlignment="Left" Margin="81,142,0,0" VerticalAlignment="Top" Width="75" Click="btnlogin_Click"/>
+                    <Label x:Name="lblwarning" Content="Incorrect Username/Password!" HorizontalAlignment="Center" Margin="0,118,-0.2,0" VerticalAlignment="Top" FontSize="10.667" Visibility="Hidden" Foreground="Red"/>
                 </Grid>
             </GroupBox>
         </Grid>

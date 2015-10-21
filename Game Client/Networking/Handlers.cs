@@ -30,6 +30,14 @@ namespace Game_Client.Networking {
                     var reason = msg.ReadString();
                     Console.WriteLine(NetUtility.ToHexString(msg.SenderConnection.RemoteUniqueIdentifier) + " " + status + ": " + reason);
                     // Do stuff here when we are connected/disconnected.
+                    if (status == NetConnectionStatus.Connected) {
+                    // If we're connecting to anything but the auth server, we'll need to send them a hello to authenticate ourselves with.
+                    var authhost = String.Format("{0}:{1}", Properties.Settings.Default["Hostname"] as String, (Int32)Properties.Settings.Default["Port"]);
+                    var curhost = String.Format("{0}:{1}", NetClient.Instance().Hostname, NetClient.Instance().Port);
+                    if (!authhost.Equals(curhost)) {
+                            Send.AuthenticateClient(Data.MyGUID);
+                        }
+                    }
                     break;
 
                 case NetIncomingMessageType.Data:
@@ -49,7 +57,9 @@ namespace Game_Client.Networking {
         }
 
         private static void HandleAuthFailed(NetIncomingMessage msg) {
-            Console.WriteLine("Incorrect Username/Password.");
+            MainWindow.Instance().Dispatcher.Invoke(()=> {
+                MainWindow.Instance().ShowLoginWarning("Incorrect Username/Password!");
+            });
         }
 
         private static void HandleAuthSuccess(NetIncomingMessage msg) {
@@ -64,7 +74,9 @@ namespace Game_Client.Networking {
                 let online      = msg.ReadBoolean()
                 select new Realm() { Name = name, Hostname = hostname, Port = port, Online = online }
             );
-            MainWindow.Instance().Dispatcher.Invoke(()=> { MainWindow.Instance().ShowRealmList(Data.RealmList); });
+            MainWindow.Instance().Dispatcher.Invoke(()=> {
+                MainWindow.Instance().ShowRealmList();
+            });
         }
     }
 }
