@@ -77,6 +77,8 @@
   <ItemGroup>
     <Compile Include="Database\Data.cs" />
     <Compile Include="Database\Realm.cs" />
+    <Compile Include="Graphics\D3DImageSlimDX.cs" />
+    <Compile Include="Graphics\D3DScene.cs" />
     <Compile Include="MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
     </Compile>

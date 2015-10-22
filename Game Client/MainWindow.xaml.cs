@@ -1,4 +1,5 @@
 ﻿using Game_Client.Database;
+using Game_Client.Graphics;
 using Game_Client.Networking;
 using System;
 using System.Collections.Generic;
@@ -19,10 +20,54 @@ namespace Game_Client {
 
     public partial class MainWindow : Window {
 
+        private D3DImageSlimDX  d3dimagecontainer;
+        private D3DScene        d3dbackdrop;
+
         private static MainWindow instance;
 
         public MainWindow() {
+            Loaded += Window_Loaded;
             InitializeComponent();
+        }
+
+        private void Window_Loaded(object sender, RoutedEventArgs e) {
+            // Initialize D3D and set up some basic settings.
+            d3dimagecontainer = new D3DImageSlimDX();
+            d3dimagecontainer.IsFrontBufferAvailableChanged += OnIsFrontBufferAvailableChanged;
+
+            GameWindow.Source = d3dimagecontainer;
+            d3dbackdrop = new D3DScene(1920, 1080);
+            SlimDX.Direct3D10.Texture2D Texture = d3dbackdrop.SharedTexture;
+
+            d3dimagecontainer.SetBackBufferSlimDX(Texture);
+            BeginRenderingScene();
+        }
+
+        private void OnIsFrontBufferAvailableChanged(object sender, DependencyPropertyChangedEventArgs e) {
+            // This fires when the screensaver kicks in, the machine goes into sleep or hibernate
+            // and any other catastrophic losses of the d3d device from WPF's point of view
+            if (d3dimagecontainer.IsFrontBufferAvailable) {
+                BeginRenderingScene();
+            } else {
+                StopRenderingScene();
+            }
+        }
+
+        private void OnRendering(object sender, EventArgs e) {
+            d3dbackdrop.Render(0);
+            d3dimagecontainer.InvalidateD3DImage();
+        }
+
+        private void BeginRenderingScene() {
+            if (d3dimagecontainer.IsFrontBufferAvailable) {
+                SlimDX.Direct3D10.Texture2D Texture = d3dbackdrop.SharedTexture;
+                d3dimagecontainer.SetBackBufferSlimDX(Texture);
+                CompositionTarget.Rendering += OnRendering;
+            }
+        }
+
+        void StopRenderingScene() {
+            CompositionTarget.Rendering -= OnRendering;
         }
 
         private void btnlogin_Click(object sender, RoutedEventArgs e) {
