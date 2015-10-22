@@ -5,9 +5,9 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Game_Client"
         mc:Ignorable="d"
-        Title="Project Chimera" Height="350" Width="525" SizeToContent="WidthAndHeight" WindowStartupLocation="CenterScreen">
+        Title="Project Chimera" Height="350" Width="525" SizeToContent="WidthAndHeight" WindowStartupLocation="CenterScreen" ResizeMode="NoResize">
     <Grid>
-        <Image Name="GameWindow" Margin="0,0,0,0" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Panel.ZIndex="-1"  />
+        <Image Name="GameWindow" Margin="0,0,0,0" Panel.ZIndex="-1" Stretch="None"  />
         <Grid Name="LoginMenu" HorizontalAlignment="Center" Height="298" Margin="0,0,0,0" VerticalAlignment="Center" Width="497" Opacity="100">
             <GroupBox x:Name="logingroup" Header="Login" HorizontalAlignment="Center" Margin="0,0,0,0" VerticalAlignment="Center" Height="182" Width="178" Background="White">
                 <Grid Margin="0,0,0,-12">
@@ -22,7 +22,7 @@
         </Grid>
 
         <Grid Name="RealmListMenu" HorizontalAlignment="Center" Height="299" Margin="0,0,0,0" VerticalAlignment="Center" Width="497" Visibility="Hidden" >
-            <GroupBox x:Name="realmgroup" Header="Select Realm" HorizontalAlignment="Center" Margin="0,0,0,0" VerticalAlignment="Center" Height="182" Width="178">
+            <GroupBox x:Name="realmgroup" Header="Select Realm" HorizontalAlignment="Center" Margin="0,0,0,0" VerticalAlignment="Center" Height="182" Width="178" Background="White">
                 <Grid Margin="0,0,0,-12">
                     <ListBox x:Name="lstrealms" HorizontalAlignment="Left" Height="127" Margin="10,10,0,0" VerticalAlignment="Top" Width="146"/>
                     <Button x:Name="btnconnect" Content="Connect" HorizontalAlignment="Center" Margin="0,0,0,10" VerticalAlignment="Bottom" Width="75" Click="btnconnect_Click"/>

@@ -36,7 +36,7 @@ namespace Game_Client {
             d3dimagecontainer.IsFrontBufferAvailableChanged += OnIsFrontBufferAvailableChanged;
 
             GameWindow.Source = d3dimagecontainer;
-            d3dbackdrop = new D3DScene(1920, 1080);
+            d3dbackdrop = new D3DScene(640, 480);
             SlimDX.Direct3D10.Texture2D Texture = d3dbackdrop.SharedTexture;
 
             d3dimagecontainer.SetBackBufferSlimDX(Texture);
