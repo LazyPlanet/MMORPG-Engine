@@ -5,7 +5,7 @@ using System.Threading;
 using Authentication_Server.Logging;
 using Authentication_Server.Database;
 using Authentication_Server.Networking;
-using Server.Logic;
+using Authentication_Server.Logic;
 
 namespace Authentication_Server {
     class Program {

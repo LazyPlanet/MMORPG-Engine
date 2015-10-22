@@ -13,7 +13,12 @@
             AuthSuccess,
             GuidOK,
             GuidError,
+            AlertMessage,
         }
 
+        public enum AlertMessage {
+            Fatal,
+            LoginScreen
+        }
     }
 }

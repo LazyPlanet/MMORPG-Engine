@@ -8,7 +8,7 @@ using System.Collections.Generic;
 using Authentication_Server.Logging;
 using Authentication_Server.Database;
 
-namespace Server.Logic {
+namespace Authentication_Server.Logic {
     public static class Input {
 
         private static Dictionary<String, Action<Object[]>> commands = new Dictionary<String, Action<Object[]>>() {
@@ -26,6 +26,16 @@ namespace Server.Logic {
             { "help", "Provides help for every command available in this program.\n- Use 'help' to get a list of available commands.\n- Use 'help command' to get more detailed information about a command." },
             { "list", "Lists all currently available entries loaded into the server for the specified item.\n- Use list 'type' to get a list of all available items of that type.\n- Available types include: guids, connections" },
             { "update", "Allows the updating of internal data taken from the database for specific items.\n- Use update 'type' to retrieve new data from the database.\n- Available types include: realms" }
+        };
+
+        private static Dictionary<String, Action> updatelist = new Dictionary<String, Action>() {
+            { "realms",         ()=> { Console.WriteLine("Updating Realm List."); Data.UpdateRealmList(); } }
+        };
+
+        private static Dictionary<String, Func<Array>> listlist = new Dictionary<String, Func<Array>>() {
+            { "guids",          ()=> { return (from item in GUIDStore.Instance().GetList() select item).ToArray(); } },
+            { "connections",    ()=> { return (from conn in Networking.NetServer.Instance().GetPeer().Connections let name = String.Format("{0}\t{1}:{2}", NetUtility.ToHexString(conn.RemoteUniqueIdentifier), conn.RemoteEndPoint.Address, conn.RemoteEndPoint.Port) select name).ToArray(); } },
+            { "realms",         ()=> { return (from item in RealmList.Instance().GetRealms() select String.Format("{0}\t{1}\t{2}:{3}", item.Key, item.Value.Name, item.Value.Hostname, item.Value.Port)).ToArray(); } }
         };
 
         public static void Process(String input) {
@@ -56,19 +66,16 @@ namespace Server.Logic {
         }
 
         private static void List(Object[] args) {
-            var logger = Logger.Instance();
             if (args.Length > 0) {
-                switch (((String)args[0]).ToLower()) {
-                    case "guids":
-                        foreach (var item in GUIDStore.Instance().GetList()) {
-                            Console.WriteLine(item);
-                        }
-                    break;
-                    case "connections":
-                        foreach (var conn in Authentication_Server.Networking.NetServer.Instance().GetPeer().Connections) {
-                            Console.WriteLine(String.Format("ID: {0} Remote: {1}", NetUtility.ToHexString(conn.RemoteUniqueIdentifier), String.Format("{0}:{1}", conn.RemoteEndPoint.Address, conn.RemoteEndPoint.Port)));
-                        }
-                    break;
+                Func<Array> exec;
+                if (!listlist.TryGetValue(((String)args[0]).ToLower(), out exec)) exec = () => { return new String[] { }; };
+                var list = exec();
+                if (list.Length > 0) {
+                    foreach (var report in list) {
+                        Console.WriteLine(report);
+                    }
+                } else {
+                    Console.WriteLine("No data or unknown list.");
                 }
             } else {
                 Console.WriteLine("Unknown list.");
@@ -89,14 +96,9 @@ namespace Server.Logic {
 
         private static void Update(Object[] args) {
             if (args.Length > 0) {
-                switch (((String)args[0]).ToLower()) {
-
-                    case "realms":
-                        Console.WriteLine("Updating Realm List.");
-                        Data.UpdateRealmList();
-                    break;
-
-                }
+                Action exec;
+                if (!updatelist.TryGetValue(((String)args[0]).ToLower(), out exec)) exec = () => { Console.WriteLine("Unknown request."); };
+                exec();
             } else {
                 Console.WriteLine("Unknown request.");
             }

@@ -60,11 +60,32 @@ namespace Realm_Server.Database {
             // Claim our mutex.
             storagemutex = false;
 
+            // get a copy of our list.
+            var players = storage;
             var result = (
-                from item in storage
+                from item in players
                 where item.Value.AuthorizationId.Equals(guid)
                 select item.Key
-           ).Single().ToString();
+           ).Single();
+
+            // Release our mutex.
+            storagemutex = true;
+
+            return result;
+        }
+        public String GetIdentifierFromDatabaseId(Int32 dbid) {
+            // wait for our mutex to clear before we continue.
+            while (!storagemutex) {
+                Thread.Sleep(1);
+            }
+            // Claim our mutex.
+            storagemutex = false;
+
+            // get a copy of our list.
+            var players = storage;
+            var result = (
+                from item in players where item.Value.DatabaseId == dbid select item.Key
+            ).FirstOrDefault();
 
             // Release our mutex.
             storagemutex = true;

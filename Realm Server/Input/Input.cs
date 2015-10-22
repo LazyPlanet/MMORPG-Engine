@@ -28,6 +28,14 @@ namespace Realm_Server.Logic {
             { "update", "Allows the updating of internal data taken from the database for specific items.\n- Use update 'type' to retrieve new data from the database.\n- Available types include: " }
         };
 
+        private static Dictionary<String, Action> updatelist = new Dictionary<String, Action>() {
+
+        };
+
+        private static Dictionary<String, Func<Array>> listlist = new Dictionary<String, Func<Array>>() {
+            {"connections",     ()=> { return (from conn in Networking.NetServer.Instance().GetPeer().Connections let name = String.Format("{0}\t{1}:{2}", NetUtility.ToHexString(conn.RemoteUniqueIdentifier), conn.RemoteEndPoint.Address, conn.RemoteEndPoint.Port) select name).ToArray(); } }
+        };
+
         public static void Process(String input) {
             // Parse our input command and pass it on to the appropriate method.
             var data = input.Split(' ');
@@ -56,14 +64,16 @@ namespace Realm_Server.Logic {
         }
 
         private static void List(Object[] args) {
-            var logger = Logger.Instance();
             if (args.Length > 0) {
-                switch (((String)args[0]).ToLower()) {
-                    case "connections":
-                        foreach (var conn in Realm_Server.Networking.NetServer.Instance().GetPeer().Connections) {
-                            Console.WriteLine(String.Format("ID: {0} Remote: {1}", NetUtility.ToHexString(conn.RemoteUniqueIdentifier), String.Format("{0}:{1}", conn.RemoteEndPoint.Address, conn.RemoteEndPoint.Port)));
-                        }
-                    break;
+                Func<Array> exec;
+                if (!listlist.TryGetValue(((String)args[0]).ToLower(), out exec)) exec = () => { return new String[] { }; };
+                var list = exec();
+                if (list.Length > 0) {
+                    foreach (var report in list) {
+                        Console.WriteLine(report);
+                    }
+                } else {
+                    Console.WriteLine("No data or unknown list.");
                 }
             } else {
                 Console.WriteLine("Unknown list.");
@@ -75,7 +85,7 @@ namespace Realm_Server.Logic {
             // Otherwise show the command's help where available.
             if (args.Length > 0) {
                 String help;
-                if (!helplist.TryGetValue((String)args[0], out help)) help = "Unknown Command";
+                if (!helplist.TryGetValue(((String)args[0]).ToLower(), out help)) help = "Unknown Command";
                 Console.WriteLine(help);
             } else {
                 Console.WriteLine(String.Format("All available commands follow. Please use 'help command' to get a more detailed overview.\n{0}", (from c in commands orderby c.Key select c.Key).ToArray().Aggregate((i, j) => i + ", " + j)));
@@ -84,10 +94,9 @@ namespace Realm_Server.Logic {
 
         private static void Update(Object[] args) {
             if (args.Length > 0) {
-                switch (((String)args[0]).ToLower()) {
-
-
-                }
+                Action exec;
+                if (!updatelist.TryGetValue(((String)args[0]).ToLower(), out exec)) exec = () => { Console.WriteLine("Unknown request."); };
+                exec();
             } else {
                 Console.WriteLine("Unknown request.");
             }
