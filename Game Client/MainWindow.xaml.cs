@@ -31,12 +31,15 @@ namespace Game_Client {
         }
 
         private void Window_Loaded(object sender, RoutedEventArgs e) {
+            // Set the login window as our visible element.
+            LoginMenu.Visibility = Visibility.Visible;
+
             // Initialize D3D and set up some basic settings.
             d3dimagecontainer = new D3DImageSlimDX();
             d3dimagecontainer.IsFrontBufferAvailableChanged += OnIsFrontBufferAvailableChanged;
 
             GameWindow.Source = d3dimagecontainer;
-            d3dbackdrop = new D3DScene(640, 480);
+            d3dbackdrop = new D3DScene(1280, 720);
             SlimDX.Direct3D10.Texture2D Texture = d3dbackdrop.SharedTexture;
 
             d3dimagecontainer.SetBackBufferSlimDX(Texture);

@@ -8,7 +8,7 @@
         Title="Project Chimera" Height="350" Width="525" SizeToContent="WidthAndHeight" WindowStartupLocation="CenterScreen" ResizeMode="NoResize">
     <Grid>
         <Image Name="GameWindow" Margin="0,0,0,0" Panel.ZIndex="-1" Stretch="None"  />
-        <Grid Name="LoginMenu" HorizontalAlignment="Center" Height="298" Margin="0,0,0,0" VerticalAlignment="Center" Width="497" Opacity="100">
+        <Grid Name="LoginMenu" HorizontalAlignment="Center" Height="298" Margin="0,0,0,0" VerticalAlignment="Center" Width="497" Opacity="100" Visibility="Hidden">
             <GroupBox x:Name="logingroup" Header="Login" HorizontalAlignment="Center" Margin="0,0,0,0" VerticalAlignment="Center" Height="182" Width="178" Background="White">
                 <Grid Margin="0,0,0,-12">
                     <Label x:Name="lbluser" Content="Username:" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top"/>
